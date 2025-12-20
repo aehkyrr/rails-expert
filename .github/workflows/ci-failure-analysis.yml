@@ -11,6 +11,7 @@ on:
       - "Markdown Lint"
       - "Ruby Lint"
       - "YAML Lint"
+      - "Shell Lint"
       - "Check Links"
       - "Validate Workflows"
     types: [completed]
@@ -106,6 +107,12 @@ jobs:
             - Common issues: style violations, naming conventions, code complexity
             - Auto-fix available: `rubocop -a` for safe fixes, `rubocop -A` for all auto-corrections
 
+            **For "Shell Lint" (ShellCheck) failures:**
+            - Look for lines like: `In filename line column: note/warning/error: [SC####]: message`
+            - Common issues: unquoted variables, missing quotes, deprecated syntax
+            - Check ShellCheck wiki for specific error codes: https://www.shellcheck.net/wiki/SC####
+            - No auto-fix available - manual corrections required
+
             ### Step 3: Find the associated PR
 
             Try to find the pull request associated with this commit:
@@ -176,6 +183,13 @@ jobs:
 
             **Option 2**: Manual fix
             {Explain specific change needed based on the cop violation}
+
+            {For ShellCheck failures}
+            **Manual fix required** (no auto-fix available)
+            - Quote variables: `"$variable"` instead of `$variable`
+            - Use `[[` instead of `[` for conditionals
+            - Check ShellCheck wiki for error code: https://www.shellcheck.net/wiki/SC####
+            {Explain specific change needed based on the error code}
 
             ---
             🤖 Analyzed by [Claude](https://claude.ai/code)
