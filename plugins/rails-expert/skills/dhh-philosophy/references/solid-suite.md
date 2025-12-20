@@ -14,7 +14,7 @@ Benefits:
 - Lower hosting costs
 - Built on modern SQL
 
-This is the "integrated systems" philosophy applied to infrastructure.
+This is the "integrated systems" philosophy applied to infrastructure. See `integrated-systems.md` for the broader architectural principle.
 
 ## Solid Cache
 
