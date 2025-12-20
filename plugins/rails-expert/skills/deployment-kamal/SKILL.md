@@ -89,7 +89,7 @@ Users never see downtime.
 
 ### Configuration
 
-Kamal is configured in `.kamal/deploy.yml`:
+Kamal is configured in `config/deploy.yml`:
 
 ```yaml
 service: myapp
@@ -137,7 +137,7 @@ Rails 8 includes Kamal Proxy (replaces Traefik):
 Kamal 2.8+ supports local registry for simple deploys:
 
 ```yaml
-# .kamal/deploy.yml
+# config/deploy.yml
 registry:
   local: true  # No Docker Hub/GHCR needed
 ```

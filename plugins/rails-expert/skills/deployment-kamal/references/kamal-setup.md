@@ -22,14 +22,14 @@ kamal init
 ```
 
 Creates:
-- `.kamal/deploy.yml` - Main configuration
+- `config/deploy.yml` - Main configuration
 - `.kamal/secrets` - Secret environment variables
 - `.kamal/hooks/` - Deployment hooks
 
 ### 3. Configure deploy.yml
 
 ```yaml
-# .kamal/deploy.yml
+# config/deploy.yml
 service: myapp
 image: your-username/myapp
 
@@ -129,7 +129,7 @@ kamal remove
 ## Multi-Environment Setup
 
 ```yaml
-# .kamal/deploy.yml
+# config/deploy.yml
 service: myapp
 image: username/myapp
 
@@ -138,7 +138,7 @@ servers:
     hosts:
       - 192.168.1.100
 
-# .kamal/deploy.staging.yml
+# config/deploy.staging.yml
 servers:
   web:
     hosts:

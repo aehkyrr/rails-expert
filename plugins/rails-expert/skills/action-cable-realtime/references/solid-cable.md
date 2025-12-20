@@ -301,7 +301,7 @@ production:
 For high-traffic apps, run Action Cable on dedicated servers:
 
 ```yaml
-# .kamal/deploy.yml
+# config/deploy.yml
 services:
   web:
     image: myapp

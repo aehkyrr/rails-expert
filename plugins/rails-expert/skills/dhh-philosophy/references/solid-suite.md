@@ -387,7 +387,7 @@ Restore from backup and everything works.
 ### Simplified Deployment
 
 ```yaml
-# .kamal/deploy.yml - Traditional
+# config/deploy.yml - Traditional
 services:
   web:
     image: myapp
@@ -399,7 +399,7 @@ services:
 ```
 
 ```yaml
-# .kamal/deploy.yml - Solid Stack
+# config/deploy.yml - Solid Stack
 services:
   web:
     image: myapp
