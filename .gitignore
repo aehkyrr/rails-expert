@@ -1,0 +1,18 @@
+# User-specific settings (should not be committed)
+.claude/*.local.md
+.claude/*.local.json
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.log

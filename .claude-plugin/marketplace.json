@@ -1,0 +1,37 @@
+{
+  "name": "rails-expert-marketplace",
+  "owner": {
+    "name": "Steve Nims",
+    "email": "sjnims@gmail.com",
+    "url": "https://github.com/sjnims"
+  },
+  "metadata": {
+    "description": "Marketplace for the Rails Expert Claude Code plugin",
+    "version": "0.1.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "rails-expert",
+      "source": "./plugins/rails-expert",
+      "description": "All-in-one Rails 8 expert development team with DHH coordinator and specialist personas for routing, Active Record, Hotwire, Action Cable, testing, deployment, and performance.",
+      "version": "0.1.0",
+      "homepage": "https://github.com/sjnims/rails-expert",
+      "repository": "https://github.com/sjnims/rails-expert",
+      "license": "MIT",
+      "keywords": [
+        "rails",
+        "rails8",
+        "ruby",
+        "hotwire",
+        "turbo",
+        "stimulus",
+        "active-record",
+        "kamal",
+        "testing",
+        "performance"
+      ],
+      "category": "development"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "rails-expert",
+  "version": "0.1.0",
+  "description": "All-in-one Rails 8 expert development team with DHH coordinator and specialist personas for routing, Active Record, Hotwire, Action Cable, testing, deployment, and performance.",
+  "author": {
+    "name": "Steve Nims",
+    "email": "sjnims@gmail.com"
+  },
+  "keywords": [
+    "rails",
+    "rails8",
+    "ruby",
+    "hotwire",
+    "turbo",
+    "stimulus",
+    "active-record",
+    "kamal",
+    "testing",
+    "performance"
+  ]
+}

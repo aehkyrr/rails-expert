@@ -1,0 +1,127 @@
+name: Claude Automated PR Review
+
+on:
+  # Using pull_request (not pull_request_target) for security:
+  # - pull_request_target exposes secrets to fork PRs, creating exfiltration risk
+  # - For fork PRs needing review, maintainers can manually @claude via claude.yml
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+# Cancel any in-progress review for the same PR when new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Skip bots and draft PRs
+    if: |
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'claude[bot]' &&
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write  # Required by claude-code-action for PR comments (GitHub API treats PR comments as issue comments)
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: "20"
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@ed55d55e820a01da7d3e4863a8c51a61d73c3228 # v1.274.0
+        with:
+          ruby-version: '3.4'
+
+      - name: Install linters
+        run: |
+          npm install -g markdownlint-cli
+          pip install yamllint==1.37.1
+          gem install erb_lint -v 0.9.0
+
+      - name: Review PR with Claude
+        uses: anthropics/claude-code-action@94e310eb2ce38c5bff2934c5858caf6cbde5ac01 # v1.0.26
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          track_progress: true
+          prompt: |
+            Review this pull request for the rails-expert Claude Code plugin.
+
+            ## Context
+            - Repository: ${{ github.repository }}
+            - PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}
+            - Author: ${{ github.event.pull_request.user.login }}
+
+            ## Instructions
+            1. Get the PR diff to understand what changed
+            2. Run linters on changed files:
+               - If any `.md` files were changed, run `markdownlint --config .markdownlint.json <files>`
+               - If any `.html` files were changed, run `npx htmlhint <files>`
+               - If any `.erb` files were changed, run `erb_lint --lint-all`
+               - If any `.yml`/`.yaml` files were changed, run `yamllint -c .yamllint.yml <files>`
+            3. Review the changes against the criteria below
+            4. Post a summary comment with your findings
+
+            ## Review Criteria
+
+            ### Plugin Components (if changed)
+            - **Commands** (`plugins/*/commands/**/*.md`): Verify YAML frontmatter has name, description, allowed-tools. Check for imperative voice ("Do X" not "You should do X").
+            - **Skills** (`plugins/*/skills/*/SKILL.md`): Check trigger phrases in description, progressive disclosure pattern (name and description required in frontmatter; version is optional).
+            - **Agents** (`plugins/*/agents/*.md`): Verify <example> blocks for triggering, appropriate tool restrictions.
+
+            ### Markdown Quality (run markdownlint)
+            Run `markdownlint --config .markdownlint.json` on changed `.md` files. Key rules enforced:
+            - ATX-style headers (`#` not underlines)
+            - Dash-style lists (`-` not `*` or `+`)
+            - 2-space indentation for nested lists
+            - Fenced code blocks (not indented)
+            Include any lint errors in your review under a "Markdown Linting" section.
+
+            ### HTML Quality (run htmlhint)
+            Run `npx htmlhint` on changed `.html` files (Bootstrap examples in `plugins/**/examples/`). Key rules:
+            - Tag pairs must match (no unclosed tags)
+            - Attribute values use double quotes
+            - Images require `alt` attributes
+            - Special characters escaped (`<` → `&lt;`)
+            Include any lint errors in your review under an "HTML Linting" section.
+
+            ### ERB Quality (run erb_lint)
+            Run `erb_lint --lint-all` if any `.erb` files were changed (Rails examples in `plugins/**/examples/`). Key rules:
+            - No extra blank lines (single blank line between sections)
+            - No trailing whitespace
+            - Files must end with a newline
+            - Consistent spacing around ERB tags
+            Include any lint errors in your review under an "ERB Linting" section.
+
+            ### YAML Quality (run yamllint)
+            Run `yamllint -c .yamllint.yml` on changed `.yml`/`.yaml` files. Key rules:
+            - 2-space indentation
+            - No trailing whitespace
+            - Newline at end of file
+            Include any lint errors in your review under a "YAML Linting" section.
+
+            ### Documentation
+            - README.md updates if user-facing changes
+            - CLAUDE.md updates if development process changes
+
+            ## Output Format
+            Post a PR comment with your review. Structure it as:
+            1. **Summary**: One-line assessment (looks good / needs changes / has concerns)
+            2. **What's Good**: Positive aspects of the PR
+            3. **Suggestions**: Improvements or issues found (if any)
+            4. **Checklist Verification**: Confirm key items are addressed
+
+            Be constructive and helpful. Focus on significant issues, not nitpicks.
+            If the PR looks good, say so briefly - don't invent problems.
+          claude_args: |
+            --allowedTools "Bash(gh pr:*),Bash(markdownlint:*),Bash(npx htmlhint:*),Bash(erb_lint:*),Bash(yamllint:*),Read,Glob,Grep,mcp__github_inline_comment__create_inline_comment"

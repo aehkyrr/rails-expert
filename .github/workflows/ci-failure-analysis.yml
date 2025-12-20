@@ -1,0 +1,205 @@
+name: CI Failure Analysis
+
+# Automatically analyze failed CI runs and provide actionable fix suggestions
+# Triggers when any lint workflow fails (Markdown, HTML, ERB, YAML, Links, Workflows)
+#
+# Testing: Intentionally fail markdownlint (e.g., change - to * in any .md file)
+
+on:
+  workflow_run:
+    workflows:
+      - "Markdown Lint"
+      - "HTML Lint"
+      - "ERB Lint"
+      - "YAML Lint"
+      - "Check Links"
+      - "Validate Workflows"
+    types: [completed]
+
+# Cancel in-progress analysis for same workflow run
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.id }}
+  cancel-in-progress: true
+
+jobs:
+  analyze-failure:
+    name: Analyze CI Failure
+    # Only run on failure, skip bot triggers to prevent loops
+    if: |
+      github.event.workflow_run.conclusion == 'failure' &&
+      github.event.workflow_run.actor.login != 'dependabot[bot]' &&
+      github.event.workflow_run.actor.login != 'claude[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+      actions: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          # Checkout at the failed commit to access correct config files
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 1
+
+      - name: Analyze failure with Claude
+        uses: anthropics/claude-code-action@94e310eb2ce38c5bff2934c5858caf6cbde5ac01 # v1.0.26
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            A CI workflow has failed. Analyze the failure and help the developer fix it.
+
+            ## Failed Workflow Details
+
+            - **Workflow**: ${{ github.event.workflow_run.name }}
+            - **Run ID**: ${{ github.event.workflow_run.id }}
+            - **Run URL**: ${{ github.event.workflow_run.html_url }}
+            - **Commit SHA**: ${{ github.event.workflow_run.head_sha }}
+            - **Branch**: ${{ github.event.workflow_run.head_branch }}
+            - **Actor**: ${{ github.event.workflow_run.actor.login }}
+            - **Repository**: ${{ github.repository }}
+
+            ## Instructions
+
+            ### Step 1: Get the failure logs
+
+            First, download and examine the workflow run logs:
+
+            ```bash
+            gh run view ${{ github.event.workflow_run.id }} --log
+            ```
+
+            If that's too verbose, get the job summary first:
+
+            ```bash
+            gh run view ${{ github.event.workflow_run.id }} --json jobs --jq '.jobs[] | select(.conclusion == "failure") | {name: .name, conclusion: .conclusion}'
+            ```
+
+            ### Step 2: Analyze the failure
+
+            Based on which workflow failed, look for specific error patterns:
+
+            **For "Markdown Lint" failures:**
+            - Look for lines like: `filename:line:column MD00X/rule-name message`
+            - Read `.markdownlint.json` to understand the project's rules
+            - Common issues: wrong list style (should use `-`), wrong header style (should use ATX `#`)
+
+            **For "HTML Lint" (htmlhint) failures:**
+            - Look for lines like: `filename:line:column error-message (rule-name)`
+            - Read `.htmlhintrc` to understand the project's rules
+            - Common issues: unclosed tags, missing alt attributes, unescaped special characters (`<`, `>`, `&`)
+
+            **For "ERB Lint" (erb_lint) failures:**
+            - Look for lines like: `In file: filename:line` followed by the error message
+            - Read `.erb_lint.yml` to understand the project's rules
+            - Common issues: extra blank lines, trailing whitespace, missing final newline, inconsistent ERB tag spacing
+
+            **For "YAML Lint" (yamllint) failures:**
+            - Look for lines like: `filename:line:column [error] message (rule-name)`
+            - Read `.yamllint.yml` to understand the project's rules
+            - Common issues: wrong indentation (should use 2 spaces), trailing spaces, missing newline at end of file
+
+            **For "Check Links" (lychee) failures:**
+            - Look for broken URLs with HTTP status codes (404, 403, etc.)
+            - Read `.lycheeignore` to see what's intentionally excluded
+            - Check if the URL has moved or if it's a false positive
+
+            **For "Validate Workflows" (actionlint) failures:**
+            - Look for YAML syntax errors or invalid workflow configurations
+            - Check for missing required fields, invalid expressions, or deprecated syntax
+
+            ### Step 3: Find the associated PR
+
+            Try to find the pull request associated with this commit:
+
+            ```bash
+            gh pr list --search "${{ github.event.workflow_run.head_sha }}" --state open --json number,title,url --jq '.[0]'
+            ```
+
+            If no PR is found (e.g., push to main), note this - you won't be able to comment.
+
+            ### Step 4: Post analysis comment
+
+            If a PR was found, post a helpful comment with your analysis. The comment should include:
+
+            1. **Summary**: What failed and why (1-2 sentences)
+            2. **Failures Found**: List each error with file, line, and explanation
+            3. **How to Fix**: Specific commands or code changes
+
+            Use this format for the comment:
+
+            ```markdown
+            ## ❌ CI Failure Analysis: {Workflow Name}
+
+            **Run**: [#{run_id}]({run_url})
+            **Commit**: `{sha:7}`
+
+            ### Summary
+
+            {Brief explanation of what failed}
+
+            ### Failures Found
+
+            | File | Line | Issue |
+            |------|------|-------|
+            | `{file}` | {line} | {description} |
+
+            ### How to Fix
+
+            {For markdown failures}
+            **Option 1**: Auto-fix with markdownlint
+            ```bash
+            markdownlint "{file}" --fix
+            ```
+
+            **Option 2**: Manual fix
+            {Explain specific change needed}
+
+            {For HTML failures}
+            ```bash
+            npx htmlhint "{file}"
+            ```
+            - Fix unclosed tags, add missing alt attributes
+            - Escape special characters: `<` → `&lt;`, `>` → `&gt;`, `&` → `&amp;`
+
+            {For ERB failures}
+            ```bash
+            erb_lint --lint-all
+            ```
+            - Remove extra blank lines (only one blank line between sections)
+            - Remove trailing whitespace
+            - Ensure file ends with a newline
+
+            {For YAML failures}
+            ```bash
+            uvx yamllint -c .yamllint.yml "{file}"
+            ```
+            - Fix indentation (use 2 spaces)
+            - Remove trailing whitespace
+            - Ensure newline at end of file
+
+            {For link failures}
+            - Check if URL has moved and update the link
+            - Or add to `.lycheeignore` if the link is expected to fail in CI
+
+            {For workflow validation failures}
+            - Show corrected YAML syntax
+
+            ---
+            🤖 Analyzed by [Claude](https://claude.ai/code)
+            ```
+
+            Post the comment using:
+            ```bash
+            gh pr comment {pr_number} --body "..."
+            ```
+
+            ### Step 5: Report outcome
+
+            After posting (or if no PR found), summarize what you found and what action was taken.
+
+          claude_args: |
+            --allowedTools "Bash(gh run:*),Bash(gh pr:*),Read"

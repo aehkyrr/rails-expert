@@ -1,0 +1,83 @@
+title: "[Show & Tell]: "
+labels: ["showcase"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share what you've built! We'd love to hear about your projects and learnings.
+
+        **Tip**: Screenshots, GIFs, or short videos help others understand your work. You can drag and drop media directly into text fields.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I've checked that my showcase doesn't expose sensitive information
+          required: true
+
+  - type: dropdown
+    id: component-type
+    attributes:
+      label: Showcase Category
+      description: "Select what you're showcasing"
+      options:
+        - Complete plugin
+        - Skill
+        - Agent
+        - Hook
+        - Command
+        - MCP integration
+        - Marketplace
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Difficulty Level
+      description: "How would you rate the complexity of this project?"
+      options:
+        - Simple (single component, basic functionality)
+        - Moderate (multiple components, some integrations)
+        - Complex (advanced integrations, novel patterns)
+    validations:
+      required: true
+
+  - type: textarea
+    id: showcase
+    attributes:
+      label: What are you sharing?
+      description: "Describe what you built or accomplished"
+      placeholder: "I built a plugin that..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: learnings
+    attributes:
+      label: Key Learnings
+      description: "What did you learn that might help others? This is the heart of Show and Tell!"
+      placeholder: "The most useful thing I learned was... A tip for others would be..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: links
+    attributes:
+      label: Links or Resources
+      description: "Any relevant links to your project, blog post, or resources"
+      placeholder: "GitHub repo: ... Blog post: ..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Sharing preferences
+      options:
+        - label: I'm okay with this being featured in project documentation
+          required: false
+        - label: I'm okay with code snippets being shared as examples
+          required: false

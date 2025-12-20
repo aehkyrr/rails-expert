@@ -1,0 +1,95 @@
+name: Bug Report
+description: Report a bug or issue with the rails-expert plugin
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the information below to help us diagnose and fix the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Tell us what happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Load plugin with `claude --plugin-dir .`
+        2. Run command `/rails-expert:component navbar`
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: Describe what should have happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: Describe what actually happened
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which part of the plugin is affected?
+      options:
+        - Command (/rails-expert:component)
+        - Skill (bootstrap-overview, bootstrap-layout, etc.)
+        - Agent (rails-expert)
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: component-name
+    attributes:
+      label: Specific Component Name
+      description: E.g., "/rails-expert:component navbar", "bootstrap-layout skill", "rails-expert agent"
+      placeholder: "Component name (if applicable)"
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Your environment details (run `gh --version` for GitHub CLI version)
+      placeholder: |
+        - OS: macOS 15.0
+        - Claude Code Version: 1.0.0
+        - Plugin Version: 0.1.0
+        - Bootstrap Version: 5.3.8
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or Error Messages
+      description: Any relevant logs or error messages
+      render: shell
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or relevant information

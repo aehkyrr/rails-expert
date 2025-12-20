@@ -1,0 +1,27 @@
+{
+  "description": "Rails Expert plugin hooks for proactive guidance when editing Rails code or running Rails commands",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are evaluating whether to engage the Rails expert team for this file operation.\n\nFirst, check if the Rails Expert plugin is enabled by reading `.claude/rails-expert.local.md`. If the file doesn't exist, assume enabled with defaults. If `enabled: false` or `auto_trigger: false`, return {\"continue\": true} without engaging.\n\nThen analyze:\n\n1. **Is this a Rails project?** Check if `config/application.rb` exists in the project root ($CLAUDE_PROJECT_DIR). If not, return {\"continue\": true}.\n\n2. **Is this a Rails file?** Check if the file path matches Rails patterns:\n   - `app/models/*.rb` (models)\n   - `app/controllers/*.rb` (controllers)\n   - `app/views/**/*` (views)\n   - `db/migrate/*.rb` (migrations)\n   - `config/routes.rb` (routes)\n   - `app/jobs/*.rb` (jobs)\n   - `app/mailers/*.rb` (mailers)\n   - `app/channels/*.rb` (channels)\n\n3. **Check exclusions** from settings:\n   - Is the file in `excluded_paths`? (default: [\"vendor/\", \"tmp/\"])\n   - Is the file in `excluded_files`?\n\n4. **Check minimum change threshold**:\n   - For Edit operations, if `minimum_change_lines` is set (default: 5), only engage if the change is substantial\n   - For Write operations of new files, always engage\n\nIf all checks pass:\n- Return {\"systemMessage\": \"The Rails expert team (led by DHH) is reviewing this Rails code. Use the Task tool to invoke the dhh-coordinator agent to provide guidance.\"}\n\nOtherwise:\n- Return {\"continue\": true}\n\nProvide concise analysis and clear decision.",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are evaluating whether to provide Rails best practices for this command.\n\nFirst, check if the Rails Expert plugin is enabled by reading `.claude/rails-expert.local.md`. If `enabled: false` or `auto_trigger: false`, return {\"continue\": true}.\n\nThen analyze the Bash command in $TOOL_INPUT:\n\n1. **Is this a Rails project?** Check if `config/application.rb` exists. If not, return {\"continue\": true}.\n\n2. **Is this a Rails command?** Check if the command contains:\n   - `rails generate` or `rails g`\n   - `rails db:migrate`\n   - `rails db:rollback`\n   - `rails db:seed`\n   - `rails db:create`\n   - `rails db:drop`\n   - `rails db:reset`\n   - `bundle exec rails`\n   - `bin/rails`\n   - Other Rails CLI commands\n\n3. **Is this potentially risky?**\n   - `rails db:drop` in production?\n   - `rails db:reset` destructive?\n   - `--skip-` flags that might cause issues?\n\nIf it's a Rails command:\n- Provide a {\"systemMessage\": \"[Brief Rails best practice or alternative for this command]. The Rails team is available for questions - use /rails-team.\"}\n- Keep message concise (1-2 sentences)\n- For risky commands, warn appropriately\n\nOtherwise:\n- Return {\"continue\": true}\n\nProvide helpful, concise Rails guidance.",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,81 @@
+title: "[Idea]: "
+labels: ["enhancement", "idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your idea! Help us understand what problem you're solving and your proposed solution.
+
+        **Before submitting**: Check [existing ideas](../../discussions/categories/ideas) and review our [contribution guidelines](../../blob/main/CONTRIBUTING.md).
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I've searched existing ideas and discussions
+          required: true
+        - label: I've checked the README for related features
+          required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Idea Category
+      description: "Select the area this idea relates to"
+      options:
+        - Plugin structure
+        - Skills
+        - Agents
+        - Hooks
+        - Commands
+        - MCP integration
+        - Marketplace
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Need
+      description: "What problem does this idea solve? What need does it address?"
+      placeholder: "I'm frustrated when... I need a way to..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Idea
+      description: "Describe your idea clearly"
+      placeholder: "The plugin should... / It would help if..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefit
+    attributes:
+      label: Expected Benefit
+      description: "How would this improve the plugin?"
+      placeholder: "This would help users by..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: "Have you thought of other ways to achieve this?"
+      placeholder: "Instead of this, we could also..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution interest
+      options:
+        - label: I'd be willing to help implement this idea
+          required: false
