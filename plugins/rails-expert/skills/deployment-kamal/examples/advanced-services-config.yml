@@ -1,0 +1,59 @@
+# Advanced: Multiple Services Configuration
+#
+# Run web servers, background workers, and scheduled tasks
+# with resource limits and separate scaling.
+
+# config/deploy.yml
+service: myapp
+image: company/myapp
+
+servers:
+  web:
+    hosts:
+      - 192.168.1.100
+      - 192.168.1.101
+    options:
+      cpus: "2"
+      memory: "2g"
+
+  worker:
+    hosts:
+      - 192.168.1.200
+    cmd: bundle exec solid_queue:start
+    options:
+      cpus: "1"
+      memory: "1g"
+
+  scheduler:
+    hosts:
+      - 192.168.1.200
+    cmd: bundle exec whenever
+    options:
+      cpus: "0.5"
+      memory: "512m"
+
+proxy:
+  ssl: true
+  host: myapp.com
+
+env:
+  clear:
+    RAILS_ENV: production
+  secret:
+    - RAILS_MASTER_KEY
+    - DATABASE_URL
+
+# =============================================================================
+# Volume Mounts for Uploads
+# =============================================================================
+volumes:
+  - storage:/rails/storage  # Active Storage files
+
+# Or use S3/cloud storage instead:
+# env:
+#   clear:
+#     ACTIVE_STORAGE_SERVICE: amazon
+#   secret:
+#     - AWS_ACCESS_KEY_ID
+#     - AWS_SECRET_ACCESS_KEY
+#     - AWS_BUCKET

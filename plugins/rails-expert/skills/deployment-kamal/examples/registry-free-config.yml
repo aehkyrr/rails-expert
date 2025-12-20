@@ -1,0 +1,28 @@
+# Registry-Free Configuration (Kamal 2.8+)
+#
+# Perfect for getting started - no Docker Hub account needed.
+# Uses local registry for simple single-server deployments.
+
+# config/deploy.yml
+service: myapp
+image: myapp
+
+servers:
+  web:
+    hosts:
+      - 192.168.1.100
+
+registry:
+  local: true  # Uses local registry, no external account required
+
+proxy:
+  ssl: true
+  host: myapp.com
+
+env:
+  secret:
+    - RAILS_MASTER_KEY
+
+healthcheck:
+  path: /up
+  port: 3000

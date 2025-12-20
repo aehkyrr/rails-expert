@@ -1,0 +1,51 @@
+# Staging + Production Environments
+#
+# Use environment-specific deploy files for different deployment targets.
+# Deploy to staging: kamal deploy -d staging
+# Deploy to production: kamal deploy
+
+# =============================================================================
+# config/deploy.yml (production - base configuration)
+# =============================================================================
+service: myapp
+image: company/myapp
+
+servers:
+  web:
+    hosts:
+      - prod-1.myapp.com
+      - prod-2.myapp.com
+
+proxy:
+  ssl: true
+  host: myapp.com
+
+env:
+  clear:
+    RAILS_ENV: production
+  secret:
+    - RAILS_MASTER_KEY
+    - DATABASE_URL
+
+# =============================================================================
+# config/deploy.staging.yml (staging overrides)
+# =============================================================================
+# This file only contains values that differ from production.
+# All other settings are inherited from deploy.yml.
+
+---
+servers:
+  web:
+    hosts:
+      - staging.myapp.com
+
+proxy:
+  ssl: true
+  host: staging.myapp.com
+
+env:
+  clear:
+    RAILS_ENV: staging
+  secret:
+    - RAILS_MASTER_KEY_STAGING
+    - DATABASE_URL_STAGING

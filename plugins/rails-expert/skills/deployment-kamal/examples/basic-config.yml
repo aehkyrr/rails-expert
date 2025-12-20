@@ -1,0 +1,30 @@
+# Basic Kamal Configuration
+#
+# Minimal configuration to get started with Kamal deployment.
+# Perfect for single-server deployments.
+
+# config/deploy.yml
+service: myapp
+image: username/myapp
+
+servers:
+  web:
+    hosts:
+      - 192.168.1.100
+
+registry:
+  username: dockerhub-username
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+proxy:
+  ssl: true
+  host: myapp.com
+
+env:
+  secret:
+    - RAILS_MASTER_KEY
+
+healthcheck:
+  path: /up
+  port: 3000

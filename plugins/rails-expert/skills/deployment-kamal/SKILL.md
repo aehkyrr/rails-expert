@@ -281,6 +281,9 @@ See `references/kamal-setup.md` for complete deployment guide.
 
 ### Local CI (Rails 8.1+)
 
+> **Note**: This feature is available in Rails 8.1+. Verify your Rails version
+> supports `config/ci.rb` before using.
+
 Rails 8.1 includes built-in CI configuration:
 
 ```ruby
@@ -372,7 +375,14 @@ For deeper exploration:
 
 For code examples:
 
-- **`examples/kamal-configs.yml`**: Kamal configuration examples
+- **`examples/basic-config.yml`**: Minimal single-server setup
+- **`examples/registry-free-config.yml`**: No Docker Hub needed (Kamal 2.8+)
+- **`examples/multi-server-config.yml`**: Multiple web servers with workers
+- **`examples/with-accessories-config.yml`**: PostgreSQL and Redis setup
+- **`examples/staging-production-config.yml`**: Environment-specific deploys
+- **`examples/custom-healthcheck-config.yml`**: Detailed health checks
+- **`examples/advanced-services-config.yml`**: Resource limits and scaling
+- **`examples/deployment-hooks.sh`**: Pre/post deploy automation
 
 ## Summary
 

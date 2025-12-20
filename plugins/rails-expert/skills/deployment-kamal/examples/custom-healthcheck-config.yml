@@ -1,0 +1,67 @@
+# Custom Health Check Configuration
+#
+# Configure detailed health checks for robust zero-downtime deploys.
+# Kamal waits for health checks to pass before routing traffic.
+
+# config/deploy.yml
+service: myapp
+image: username/myapp
+
+servers:
+  web:
+    hosts:
+      - 192.168.1.100
+
+healthcheck:
+  path: /health         # Custom health endpoint
+  port: 3000
+  interval: 10s
+  timeout: 5s
+  retries: 5
+  start_period: 30s     # Grace period after container start
+
+# =============================================================================
+# Rails Health Controller
+# =============================================================================
+#
+# app/controllers/health_controller.rb
+#
+# class HealthController < ApplicationController
+#   def show
+#     checks = {
+#       database: check_database,
+#       cache: check_cache,
+#       disk: check_disk_space
+#     }
+#
+#     if checks.values.all?
+#       render json: { status: "healthy", checks: checks }, status: :ok
+#     else
+#       render json: { status: "unhealthy", checks: checks }, status: :service_unavailable
+#     end
+#   end
+#
+#   private
+#
+#   def check_database
+#     ActiveRecord::Base.connection.execute("SELECT 1")
+#     true
+#   rescue StandardError
+#     false
+#   end
+#
+#   def check_cache
+#     Rails.cache.write("health_check", "ok", expires_in: 1.minute)
+#     Rails.cache.read("health_check") == "ok"
+#   rescue StandardError
+#     false
+#   end
+#
+#   def check_disk_space
+#     # Ensure at least 10% disk space available
+#     true
+#   end
+# end
+#
+# config/routes.rb
+# get "health", to: "health#show"

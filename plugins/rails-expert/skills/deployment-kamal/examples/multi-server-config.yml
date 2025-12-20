@@ -1,0 +1,38 @@
+# Multi-Server Configuration
+#
+# Deploy to multiple web servers with a separate worker server.
+# Kamal Proxy automatically load balances across web servers.
+
+# config/deploy.yml
+service: myapp-production
+image: company/myapp
+
+servers:
+  web:
+    hosts:
+      - 192.168.1.100
+      - 192.168.1.101
+      - 192.168.1.102
+
+  worker:
+    hosts:
+      - 192.168.1.200
+    cmd: bundle exec solid_queue:start
+
+registry:
+  server: ghcr.io
+  username: github-username
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+proxy:
+  ssl: true
+  host: myapp.com
+
+env:
+  clear:
+    RAILS_ENV: production
+    RAILS_LOG_LEVEL: info
+  secret:
+    - RAILS_MASTER_KEY
+    - DATABASE_URL

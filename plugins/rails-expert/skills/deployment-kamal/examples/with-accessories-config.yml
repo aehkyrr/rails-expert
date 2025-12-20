@@ -1,0 +1,49 @@
+# Configuration with Accessories (Database, Redis)
+#
+# Deploy PostgreSQL and Redis alongside your Rails application.
+# Useful for self-contained deployments without managed services.
+
+# config/deploy.yml
+service: myapp
+image: username/myapp
+
+servers:
+  web:
+    hosts:
+      - 192.168.1.100
+
+accessories:
+  db:
+    image: postgres:16
+    host: 192.168.1.100
+    port: 5432
+    env:
+      POSTGRES_DB: myapp_production
+      POSTGRES_USER: myapp
+      POSTGRES_PASSWORD:
+        - DB_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+    options:
+      health:
+        interval: 10s
+        timeout: 5s
+        retries: 5
+
+  redis:
+    image: redis:7-alpine
+    host: 192.168.1.100
+    port: 6379
+    directories:
+      - data:/data
+
+proxy:
+  ssl: true
+  host: myapp.com
+
+env:
+  clear:
+    DATABASE_URL: postgresql://myapp:password@db:5432/myapp_production
+    REDIS_URL: redis://redis:6379/0
+  secret:
+    - RAILS_MASTER_KEY
