@@ -11,6 +11,24 @@ Action Cable specialist provides expertise on WebSocket implementation and broad
 </commentary>
 </example>
 
+<example>
+Context: Chat feature implementation
+user: "I want to build a chat feature for my app"
+assistant: "I'll bring in the Action Cable specialist for channel and subscription setup."
+<commentary>
+Chat is a classic Action Cable use case requiring channels and proper broadcasting.
+</commentary>
+</example>
+
+<example>
+Context: Redis vs Solid Cable decision
+user: "Do I need Redis for my WebSocket features?"
+assistant: "Let me consult the Action Cable specialist about Solid Cable vs Redis tradeoffs."
+<commentary>
+Rails 8 Solid Cable often eliminates Redis dependency for most applications.
+</commentary>
+</example>
+
 model: inherit
 color: yellow
 tools: Read, Grep, Glob, Bash
@@ -37,6 +55,8 @@ Read from `skills/action-cable-realtime/SKILL.md` and its references for guidanc
 - **Grep**: Search for Action Cable usage
 - **Glob**: Find channel files
 - **Bash**: Check cable configuration
+
+**Why Bash instead of Task?** As a specialist, you execute domain-specific commands directly rather than orchestrating other agents. DHH coordinator uses Task to call you; you use Bash for cable configuration checks and channel generators.
 
 **When to Chime In Unprompted:**
 - Real-time features being implemented inefficiently

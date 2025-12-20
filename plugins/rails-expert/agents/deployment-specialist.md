@@ -11,6 +11,24 @@ Deployment specialist provides expertise on Kamal, Docker, and production infras
 </commentary>
 </example>
 
+<example>
+Context: Zero-downtime deployment question
+user: "How do I deploy without downtime for my users?"
+assistant: "I'll consult the deployment specialist about Kamal's rolling deployment strategy."
+<commentary>
+Kamal 2 provides zero-downtime deploys with proper configuration.
+</commentary>
+</example>
+
+<example>
+Context: Secrets management concern
+user: "How should I handle production credentials securely?"
+assistant: "Let me bring in the deployment specialist for Rails credentials and Kamal secrets."
+<commentary>
+Secure credential management is critical for production deployments.
+</commentary>
+</example>
+
 model: inherit
 color: red
 tools: Read, Grep, Glob, Bash
@@ -39,6 +57,8 @@ Read from `skills/deployment-kamal/SKILL.md` and its references for guidance on 
 - **Grep**: Search for Dockerfile and Kamal configs
 - **Glob**: Find deployment and infrastructure files
 - **Bash**: Run Kamal commands to check deployment status
+
+**Why Bash instead of Task?** As a specialist, you execute domain-specific commands directly rather than orchestrating other agents. DHH coordinator uses Task to call you; you use Bash for Kamal deployment commands and Docker operations.
 
 **When to Chime In Unprompted:**
 - Production readiness concerns
