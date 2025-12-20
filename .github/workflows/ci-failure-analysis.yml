@@ -38,12 +38,9 @@ jobs:
       id-token: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-        with:
-          # Checkout at the failed commit to access correct config files
-          ref: ${{ github.event.workflow_run.head_sha }}
-          fetch-depth: 1
+      # NOTE: No checkout needed - gh CLI accesses logs directly via API.
+      # Avoiding checkout prevents untrusted code execution in workflow_run context.
+      # See: https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
 
       - name: Analyze failure with Claude
         uses: anthropics/claude-code-action@7145c3e0510bcdbdd29f67cc4a8c1958f1acfa2f # v1.0.27
@@ -84,17 +81,14 @@ jobs:
 
             **For "Markdown Lint" failures:**
             - Look for lines like: `filename:line:column MD00X/rule-name message`
-            - Read `.markdownlint.json` to understand the project's rules
             - Common issues: wrong list style (should use `-`), wrong header style (should use ATX `#`)
 
             **For "YAML Lint" (yamllint) failures:**
             - Look for lines like: `filename:line:column [error] message (rule-name)`
-            - Read `.yamllint.yml` to understand the project's rules
             - Common issues: wrong indentation (should use 2 spaces), trailing spaces, missing newline at end of file
 
             **For "Check Links" (lychee) failures:**
             - Look for broken URLs with HTTP status codes (404, 403, etc.)
-            - Read `.lycheeignore` to see what's intentionally excluded
             - Check if the URL has moved or if it's a false positive
 
             **For "Validate Workflows" (actionlint) failures:**
@@ -103,7 +97,6 @@ jobs:
 
             **For "Ruby Lint" (RuboCop) failures:**
             - Look for lines like: `filename:line:column: C: CopName: message`
-            - Read `.rubocop.yml` to understand the project's rules
             - Common issues: style violations, naming conventions, code complexity
             - Auto-fix available: `rubocop -a` for safe fixes, `rubocop -A` for all auto-corrections
 
@@ -205,4 +198,4 @@ jobs:
             After posting (or if no PR found), summarize what you found and what action was taken.
 
           claude_args: |
-            --allowedTools "Bash(gh run:*),Bash(gh pr:*),Read"
+            --allowedTools "Bash(gh run:*),Bash(gh pr:*)"

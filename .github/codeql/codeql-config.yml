@@ -1,0 +1,25 @@
+# CodeQL Configuration
+# https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning
+#
+# This configuration excludes educational example files from CodeQL analysis.
+# These files demonstrate Rails patterns and are never executed as actual Rails code.
+
+name: "Rails Expert Plugin CodeQL Config"
+
+# Paths to exclude from analysis
+# Example files contain intentional patterns that trigger false positives:
+# - CSRF warnings on controller examples (they inherit from ApplicationController in real apps)
+# - API controllers correctly skip CSRF (APIs use token auth)
+paths-ignore:
+  # Educational example files - not executable Rails code
+  - "**/examples/*.rb"
+  - "**/skills/**/examples/**"
+  # Test fixtures if any
+  - "**/fixtures/**"
+  - "**/test_data/**"
+
+# Query filters to reduce noise
+# Uncomment to disable specific queries if needed
+# query-filters:
+#   - exclude:
+#       id: rb/csrf-protection-not-enabled
