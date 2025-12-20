@@ -37,8 +37,10 @@ servers:
   web:
     hosts:
       - 192.168.1.100  # Your server IP
-    labels:
-      traefik.http.routers.myapp.rule: Host(`myapp.com`)
+
+proxy:
+  ssl: true
+  host: myapp.com
 
 registry:
   username: your-docker-hub-username

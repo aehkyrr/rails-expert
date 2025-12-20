@@ -100,10 +100,10 @@ servers:
     hosts:
       - 192.168.1.1
       - 192.168.1.2
-    labels:
-      traefik.http.routers.myapp.rule: Host(`myapp.com`)
-      traefik.http.routers.myapp.tls: true
-      traefik.http.routers.myapp.tls.certresolver: letsencrypt
+
+proxy:
+  ssl: true
+  host: myapp.com
 
 registry:
   username: username
