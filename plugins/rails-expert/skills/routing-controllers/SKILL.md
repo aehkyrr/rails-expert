@@ -668,48 +668,6 @@ response.content_type = 'application/json'
 
 ## Common Patterns
 
-### Service Objects
-
-Extract complex operations:
-
-```ruby
-# app/services/order_placement_service.rb
-class OrderPlacementService
-  def initialize(order, user)
-    @order = order
-    @user = user
-  end
-
-  def call
-    ActiveRecord::Base.transaction do
-      assign_user
-      calculate_totals
-      charge_payment
-      send_confirmation
-      update_inventory
-    end
-  rescue => e
-    @order.errors.add(:base, e.message)
-    false
-  end
-
-  private
-  # ... implementation
-end
-
-# Controller
-def create
-  @order = Order.new(order_params)
-  service = OrderPlacementService.new(@order, current_user)
-
-  if service.call
-    redirect_to @order
-  else
-    render :new
-  end
-end
-```
-
 ### Responders
 
 Handle multiple formats cleanly:

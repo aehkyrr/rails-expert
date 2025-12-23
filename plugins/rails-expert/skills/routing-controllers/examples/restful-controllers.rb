@@ -193,61 +193,6 @@ class ProductsController < ApplicationController
 end
 
 # ==============================================================================
-# Alternative: Using Service Objects for Complex Operations
-# ==============================================================================
-
-class ProductsController < ApplicationController
-  # ... other actions ...
-
-  def create
-    @product = Product.new(params.expect(product: [:name, :price, :category_id]))
-    service = ProductCreationService.new(@product, current_user)
-
-    if service.call
-      redirect_to @product, notice: 'Product created successfully!'
-    else
-      @categories = Category.all
-      render :new, status: :unprocessable_entity
-    end
-  end
-end
-
-# app/services/product_creation_service.rb
-class ProductCreationService
-  def initialize(product, user)
-    @product = product
-    @user = user
-  end
-
-  def call
-    ActiveRecord::Base.transaction do
-      @product.user = @user
-      @product.save!
-      create_initial_inventory
-      notify_team
-      track_analytics
-    end
-    true
-  rescue ActiveRecord::RecordInvalid
-    false
-  end
-
-  private
-
-  def create_initial_inventory
-    InventoryItem.create!(product: @product, quantity: 0)
-  end
-
-  def notify_team
-    ProductMailer.new_product(@product).deliver_later
-  end
-
-  def track_analytics
-    Analytics.track('product_created', product_id: @product.id)
-  end
-end
-
-# ==============================================================================
 # Controller Concerns: Shared Behavior
 # ==============================================================================
 
