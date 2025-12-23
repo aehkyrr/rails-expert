@@ -79,6 +79,43 @@ config.after_initialize do
 end
 ```
 
+### Strict Loading
+
+Enforce eager loading by raising errors when associations are lazily loaded:
+
+```ruby
+# On a relation - raises ActiveRecord::StrictLoadingViolationError
+user = User.strict_loading.first
+user.address.city  # raises error - not eager loaded
+
+# On a record
+user = User.first
+user.strict_loading!
+user.comments.to_a  # raises error
+
+# N+1 only mode - allows singular associations, catches collection lazy loads
+user.strict_loading!(mode: :n_plus_one_only)
+user.address.city  # allowed (singular)
+user.comments.first.likes.to_a  # raises error (N+1 risk)
+
+# On an association
+class Author < ApplicationRecord
+  has_many :books, strict_loading: true
+end
+```
+
+**App-wide configuration:**
+
+```ruby
+# config/application.rb
+config.active_record.strict_loading_by_default = true
+
+# Log instead of raise
+config.active_record.action_on_strict_loading_violation = :log
+```
+
+Use `strict_loading` in development/staging to catch N+1 queries before production.
+
 ### Database Indexes
 
 Add indexes for frequently queried columns:

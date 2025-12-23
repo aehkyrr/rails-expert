@@ -179,6 +179,58 @@ end
 
 Only uncached items execute the block.
 
+### Using cache_key_with_version
+
+For model-based cache keys that auto-invalidate on updates:
+
+```ruby
+class Product < ApplicationRecord
+  def competing_price
+    Rails.cache.fetch("#{cache_key_with_version}/competing_price", expires_in: 12.hours) do
+      Competitor::API.find_price(id)
+    end
+  end
+end
+```
+
+`cache_key_with_version` generates keys like `products/233-20140225082222765838000/competing_price`:
+
+- Model class name (`products`)
+- Record ID (`233`)
+- `updated_at` timestamp
+- Your suffix (`competing_price`)
+
+Cache automatically expires when the record is updated.
+
+### Avoid Caching Active Record Objects
+
+**Anti-pattern** - don't cache AR instances:
+
+```ruby
+# BAD: Caching AR objects directly
+Rails.cache.fetch("super_admin_users", expires_in: 12.hours) do
+  User.super_admins.to_a
+end
+```
+
+**Why it's problematic:**
+
+- Cached instances may have stale attributes
+- Records could be deleted but still in cache
+- Development mode cache behaves unreliably with code reloading
+
+**Correct approach** - cache IDs or primitives:
+
+```ruby
+# GOOD: Cache IDs, load fresh records
+ids = Rails.cache.fetch("super_admin_user_ids", expires_in: 12.hours) do
+  User.super_admins.pluck(:id)
+end
+User.where(id: ids).to_a
+```
+
+This pattern gives you cache benefits while ensuring data freshness.
+
 ### Conditional Caching
 
 ```ruby
