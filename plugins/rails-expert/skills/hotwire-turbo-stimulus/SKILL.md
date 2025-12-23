@@ -511,9 +511,22 @@ For deeper exploration:
 - **`references/turbo-streams.md`**: Broadcasting and real-time updates
 - **`references/stimulus-controllers.md`**: Building Stimulus controllers
 
-For code examples:
+For code examples (in `examples/`):
 
-- **`examples/hotwire-patterns.js`**: Common Hotwire patterns
+- **`autosave_controller.js`**: Auto-save form data
+- **`character_counter_controller.js`**: Live character counting
+- **`clipboard_controller.js`**: Copy to clipboard functionality
+- **`confirm_controller.js`**: Confirmation dialogs
+- **`dropdown_controller.js`**: Interactive dropdown menus
+- **`form_controller.js`**: Form handling and validation
+- **`infinite_scroll_controller.js`**: Infinite scroll pagination
+- **`modal_controller.js`**: Modal dialogs with Stimulus
+- **`nested_form_controller.js`**: Dynamic nested form fields
+- **`remote_form_controller.js`**: AJAX form submissions
+- **`search_controller.js`**: Real-time search filtering
+- **`slideshow_controller.js`**: Image carousel/slideshow
+- **`tabs_controller.js`**: Tab navigation
+- **`toggle_controller.js`**: Toggle visibility patterns
 
 ## Summary
 

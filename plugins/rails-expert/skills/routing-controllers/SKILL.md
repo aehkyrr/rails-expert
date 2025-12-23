@@ -690,7 +690,6 @@ For deeper exploration:
 
 - **`references/routing-patterns.md`**: Advanced routing techniques (constraints, custom routes, route testing)
 - **`references/strong-parameters.md`**: Complete guide to parameter handling and security
-- **`references/controller-testing.md`**: Testing controllers effectively
 
 For code examples:
 
