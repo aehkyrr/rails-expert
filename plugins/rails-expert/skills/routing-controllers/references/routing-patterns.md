@@ -77,6 +77,27 @@ Rails.application.routes.draw do
 end
 ```
 
+### When to Version APIs (Rarely)
+
+API versioning (v1, v2, v3) should be rare. The Rails Way prefers **evolving APIs**:
+
+**Prefer evolution:**
+
+- Add new fields without removing old ones
+- Deprecate old fields with warnings, maintain temporarily
+- Design additive changes that don't break existing clients
+- Use `respond_to` to support multiple formats gracefully
+
+**Only version when unavoidable:**
+
+- Fundamental breaking changes to core data model
+- Complete rewrite of API contract
+- External constraints require hard cutover
+
+For most applications, good API design eliminates the need for versioning. If you find yourself reaching for v2, ask: "Can I evolve v1 instead?"
+
+The constraint patterns above show _how_ to version if truly needed, not _that_ you should version.
+
 ### Request-Based Constraints
 
 Route based on request properties:

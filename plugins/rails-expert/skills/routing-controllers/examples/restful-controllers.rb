@@ -287,6 +287,11 @@ end
 # ==============================================================================
 # API Controller Example
 # ==============================================================================
+#
+# Note: API versioning (v1, v2, etc.) should be rare. The Rails Way prefers
+# evolving APIs by adding fields and deprecating gracefully. Only version when
+# you have unavoidable breaking changes. See references/routing-patterns.md
+# for guidance on when versioning is appropriate.
 
 module Api
   module V1
