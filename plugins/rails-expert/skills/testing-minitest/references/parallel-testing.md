@@ -86,6 +86,35 @@ parallelize(workers: :number_of_processors, threshold: 50)
 
 Tests run sequentially if fewer than 50 tests exist. This avoids parallelization overhead for small test suites.
 
+### Work Stealing
+
+Enable work stealing to improve load balance when test durations vary significantly:
+
+```ruby
+parallelize(workers: :number_of_processors, work_stealing: true)
+```
+
+**How it works:** When a worker finishes its assigned tests, it can "steal" pending tests from other workers that are still busy. This helps prevent scenarios where one worker finishes early while another is stuck running slow tests.
+
+**Trade-offs:**
+
+- **Pro:** Better utilization when test durations are uneven
+- **Pro:** Faster overall completion time for heterogeneous test suites
+- **Con:** Less reproducible test distribution between runs
+- **Con:** Slightly harder to debug ordering-related failures
+
+**When to use:**
+
+- Test suite has a mix of fast and slow tests
+- Some tests are significantly slower (integration, system tests)
+- Workers frequently finish at different times
+
+**When to avoid:**
+
+- Need reproducible test distribution for debugging
+- All tests have similar execution times
+- Investigating intermittent failures related to test ordering
+
 ## Setup and Teardown Hooks
 
 ### Per-Worker Setup

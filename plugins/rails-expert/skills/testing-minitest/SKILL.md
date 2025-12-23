@@ -246,13 +246,13 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get products_url
     assert_response :success
-    assert_select "h1", "Products"
+    assert_dom "h1", "Products"
   end
 
   test "should show product" do
     get product_url(products(:widget))
     assert_response :success
-    assert_select "h2", "Widget"
+    assert_dom "h2", "Widget"
   end
 
   test "should create product" do
@@ -372,8 +372,8 @@ assert_no_changes -> { product.reload.price }
 assert_response :success
 assert_response :redirect
 assert_redirected_to product_path(product)
-assert_select "h1", "Products"
-assert_select "div.product", count: 5
+assert_dom "h1", "Products"
+assert_dom "div.product", count: 5
 ```
 
 ### SQL Query Assertions

@@ -1,0 +1,272 @@
+# Rails Fixtures Examples
+#
+# Fixtures provide a declarative way to define test data in YAML.
+# Rails loads fixtures into the test database before each test.
+#
+# Location: test/fixtures/*.yml
+# Access: Use the fixture method, e.g., users(:admin)
+#
+# Note: This file demonstrates fixture patterns. In actual Rails projects,
+# fixtures can include ERB (shown in comments). Rails processes .yml files
+# as ERB templates before parsing as YAML.
+
+# ==============================================================================
+# BASIC FIXTURES
+# ==============================================================================
+
+# test/fixtures/users.yml
+# Each key becomes a fixture name accessible via users(:admin), users(:customer)
+
+admin:
+  name: Admin User
+  email: admin@example.com
+  role: admin
+  # Use ERB for dynamic values: created_at: <%%= 1.year.ago %>
+  created_at: "2024-01-01 00:00:00"
+
+customer:
+  name: Customer User
+  email: customer@example.com
+  role: customer
+  created_at: "2024-11-01 00:00:00"
+
+# ==============================================================================
+# ASSOCIATION REFERENCES
+# ==============================================================================
+
+# test/fixtures/categories.yml
+# Simple parent records for associations
+
+electronics:
+  name: Electronics
+  slug: electronics
+
+clothing:
+  name: Clothing
+  slug: clothing
+
+# test/fixtures/products.yml
+# Reference associations by fixture name (not ID)
+
+widget:
+  name: Widget
+  price: 9.99
+  available: true
+  category: electronics  # References categories(:electronics)
+  created_by: admin      # References users(:admin)
+
+gadget:
+  name: Gadget
+  price: 14.99
+  available: false
+  category: electronics
+  created_by: admin
+
+tshirt:
+  name: T-Shirt
+  price: 24.99
+  available: true
+  category: clothing
+  created_by: customer
+
+# ==============================================================================
+# ERB IN FIXTURES
+# ==============================================================================
+
+# test/fixtures/products.yml
+# Generate multiple fixtures dynamically using ERB loops:
+#
+# <%% 5.times do |n| %>
+# generated_product_<%%= n %>:
+#   name: Generated Product <%%= n %>
+#   price: <%%= (n + 1) * 10.00 %>
+#   available: <%%= n.even? %>
+#   category: electronics
+#   created_at: <%%= n.days.ago %>
+# <%% end %>
+#
+# The above ERB generates fixtures like:
+
+generated_product_0:
+  name: Generated Product 0
+  price: 10.00
+  available: true
+  category: electronics
+  created_at: "2024-12-23 00:00:00"
+
+generated_product_1:
+  name: Generated Product 1
+  price: 20.00
+  available: false
+  category: electronics
+  created_at: "2024-12-22 00:00:00"
+
+generated_product_2:
+  name: Generated Product 2
+  price: 30.00
+  available: true
+  category: electronics
+  created_at: "2024-12-21 00:00:00"
+
+# Using Ruby expressions for realistic data:
+# created_at: <%%= 3.months.ago %>
+# updated_at: <%%= 1.week.ago %>
+
+timestamped_product:
+  name: Timestamped Product
+  price: 49.99
+  available: true
+  category: electronics
+  created_at: "2024-09-23 00:00:00"
+  updated_at: "2024-12-16 00:00:00"
+
+# ==============================================================================
+# POLYMORPHIC ASSOCIATIONS
+# ==============================================================================
+
+# test/fixtures/comments.yml
+# Polymorphic associations require both type and reference
+
+product_comment:
+  body: Great product!
+  commentable: widget (Product)  # Syntax: fixture_name (ModelClass)
+  user: customer
+
+category_comment:
+  body: Love this category!
+  commentable: electronics (Category)
+  user: customer
+
+# ==============================================================================
+# SELF-REFERENTIAL ASSOCIATIONS
+# ==============================================================================
+
+# test/fixtures/employees.yml
+# Reference other fixtures of the same type
+
+ceo:
+  name: CEO
+  manager:   # null for top-level
+
+vp_engineering:
+  name: VP Engineering
+  manager: ceo
+
+senior_developer:
+  name: Senior Developer
+  manager: vp_engineering
+
+# ==============================================================================
+# HABTM (has_and_belongs_to_many)
+# ==============================================================================
+
+# test/fixtures/tags.yml
+featured:
+  name: Featured
+
+sale:
+  name: On Sale
+
+new_arrival:
+  name: New Arrival
+
+# test/fixtures/products_tags.yml (join table)
+# No fixture name needed for join tables - just define the associations
+
+widget_featured:
+  product: widget
+  tag: featured
+
+widget_new:
+  product: widget
+  tag: new_arrival
+
+gadget_sale:
+  product: gadget
+  tag: sale
+
+# ==============================================================================
+# ACTIVE STORAGE ATTACHMENTS
+# ==============================================================================
+
+# test/fixtures/active_storage/blobs.yml
+# Define the blob (file metadata)
+# checksum: <%%= Digest::MD5.base64digest("test image content") %>
+# created_at: <%%= Time.current %>
+
+product_image_blob:
+  key: product-image-key
+  filename: product.jpg
+  content_type: image/jpeg
+  service_name: test
+  byte_size: 12345
+  checksum: dGVzdCBpbWFnZSBjb250ZW50  # Base64 encoded
+  created_at: "2024-12-23 00:00:00"
+
+user_avatar_blob:
+  key: user-avatar-key
+  filename: avatar.png
+  content_type: image/png
+  service_name: test
+  byte_size: 5678
+  checksum: YXZhdGFyIGNvbnRlbnQ=  # Base64 encoded
+  created_at: "2024-12-23 00:00:00"
+
+# test/fixtures/active_storage/attachments.yml
+# Link blobs to records
+
+product_image_attachment:
+  name: image
+  record: widget (Product)
+  blob: product_image_blob
+
+user_avatar_attachment:
+  name: avatar
+  record: admin (User)
+  blob: user_avatar_blob
+
+# Note: Place actual test files in test/fixtures/files/ directory
+# and reference them in your tests or setup
+
+# ==============================================================================
+# ENCRYPTED ATTRIBUTES
+# ==============================================================================
+
+# test/fixtures/api_keys.yml
+# Encrypted attributes can use plain text in fixtures
+# Rails encrypts automatically when loading
+
+api_key_production:
+  name: Production Key
+  secret: plain-text-secret-here  # Will be encrypted by Rails
+  user: admin
+  active: true
+
+api_key_development:
+  name: Development Key
+  secret: dev-secret-123
+  user: customer
+  active: true
+
+# ==============================================================================
+# FIXTURES BEST PRACTICES
+# ==============================================================================
+
+# 1. Use meaningful fixture names
+#    GOOD: admin, premium_customer, expired_subscription
+#    BAD: user1, user2, test_user
+
+# 2. Define minimal required attributes
+#    Let validations and defaults handle the rest
+
+# 3. Keep fixtures focused on the entity
+#    Don't over-engineer - add fixtures as tests need them
+
+# 4. Use ERB sparingly
+#    Only for dynamic values like timestamps, not complex logic
+
+# 5. Document unusual fixtures
+#    Add comments explaining edge cases or special configurations
+
+# 6. Match production-like data
+#    Use realistic values to catch edge cases early
