@@ -6,9 +6,7 @@ allowed-tools: Read, Write, AskUserQuestion
 
 # Rails Expert Plugin Configuration
 
-This command helps you configure the Rails Expert plugin settings.
-
-Check if `.claude/rails-expert.local.md` exists. If it does, read it to show current configuration.
+Read `.claude/rails-expert.local.md` if it exists to display current configuration.
 
 $IF($ARGUMENTS,
 Quick configuration mode with arguments: $ARGUMENTS
@@ -54,11 +52,8 @@ bash_enabled_specialists: ["all"]       # Which specialists can run commands
 Configuration saved. Settings take effect after restarting Claude Code.
 ```
 
-After creating/updating the file, inform the user:
+After saving, confirm success and display:
 
-1. Configuration saved successfully
-2. Summary of current settings
-3. Reminder that changes require restarting Claude Code
-4. Suggestion to run `/rails-team` to test the configuration
-
-Make configuration easy and clear!
+- Current settings summary
+- Note: changes require restarting Claude Code
+- Suggest running `/rails-team` to verify configuration
